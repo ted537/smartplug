@@ -8,14 +8,18 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
-#include "pindefines.h"
 
 // these values are all wrong right now
 // A suffix is analogue
 // D suffix is digital
-#define TEMP_PIN_A 1 // temp value
-#define SWITCH_PIN_D 2 // digital switch
-#define DIAL_PIN_A 3 // analogue dial
+#define TEMP_PIN_1_A SDA
+#define TEMP_PIN_2_A SCL
+// not actually too sure about these ones
+// if it doesn't work, try PD6 and/or PD7
+#define SWITCH_PIN_1_D PB0
+#define SWITCH_PIN_2_D PB1
+#define DIAL_PIN_1_A PB2
+#define DIAL_PIN_2_A PB3
 
 typedef struct {
 	// basically a bool
