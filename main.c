@@ -23,13 +23,15 @@
 
 typedef struct {
 	// basically a bool
-	int switchon;
+	int switchon_1,switchon_2;
 	// plop data in here
 } pininputs;
 
-void adjustwithtemp();
-void adjustwithouttemp();
-pininputs readpins();
+void adjustwithtemp_1(void);
+void adjustwithtemp_2(void);
+void adjustwithouttemp_1(void);
+void adjustwithouttemp_2(void);
+pininputs readpins(void);
 
 // turns ADC on with correct settings by configuring bitmask
 // info here http://www.robotplatform.com/knowledge/ADC/adc_tutorial_2.html
@@ -40,17 +42,34 @@ static inline void initADC0(void) {
 	ADCSRA |= (1 << ADEN);  // enable ADC
 }
 
+static inline void initSwitches(void) {
+
+}
+
+static inline void setupPins() {
+	// setup pins as input or output
+	DDRB = 0b00000000;
+	DDRC = 0b00000000;
+	DDRD = 0b11000000;
+}
+
+// need to add second one
 int main(void) {
+	setupPins();
 	initADC0();
-	// initialize pullup resistor on the switch pin
-	PORTD |= (1<<SWITCH_PIN_D);
 	while (1) {
 		pininputs inputs = readpins();
-		if (inputs.switchon) {
-			adjustwithtemp();	
+		if (inputs.switchon_1) {
+			adjustwithtemp_1();	
 		}
 		else {
-			adjustwithouttemp();
+			adjustwithouttemp_1();
+		}
+		if (inputs.switchon_2) {
+			adjustwithtemp_1();
+		}
+		else {
+			adjustwithouttemp_2();
 		}
 		_delay_ms(50); // wait a bit
 	}
@@ -59,21 +78,31 @@ int main(void) {
 pininputs readpins(void) {
 	// is there only one ADC pin?
 	// how do we read input of both temp and dial?
+	// gotta read successively i guess
 	// start ADC up
 	ADCSRA |= (1<<ADSC);
 	// gotta wait until the ADC does it thing
 	uint8_t adcValue = ADC;
 
 	pininputs rtrnme;
-	rtrnme.switchon = bit_is_clear(PIND,SWITCH_PIN_D);
+	rtrnme.switchon_1 = bit_is_set(PIND,SWITCH_PIN_1_D);
+	rtrnme.switchon_2 = bit_is_set(PIND,SWITCH_PIN_2_D);
 	uint8_t tempvalue;
 	return rtrnme;
 }
 
-void adjustwithtemp(void) {
+void adjustwithtemp_1(void) {
 
 }
 
-void adjustwithouttemp(void) {
+void adjustwithtemp_2(void) {
+
+}
+
+void adjustwithouttemp_1(void) {
+
+}
+
+void adjustwithouttemp_2(void) {
 
 }
