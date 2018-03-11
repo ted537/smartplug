@@ -159,7 +159,9 @@ void adjustwithtemp_2(void) {
 }
 
 void adjustwithouttemp_1(void) {
-
+	uint8_t pulsewidth = input.dial1*PWM_PERIOD/ADC_PRECISION;
+	uint8_t pin = PWM_PIN_1;
+	pwmpin(&pwm1_i,pulsewidth,pin);
 }
 
 void adjustwithouttemp_2(pininputs input) {
