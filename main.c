@@ -37,6 +37,8 @@
 #define SELECT_ADC6 0b00000110
 #define SELECT_ADC7 0b00000111
 
+#define ADC_PRECISION 1024
+
 // defines period of PWM in clock cycles
 // higher is more accurate but slower
 // lower is less accurate but faster
@@ -45,7 +47,7 @@
 // WARNING GLOBAL VARIABLES AHEAD
 
 // indexes for PWM
-uint8_t dial1_i,dial2_i,temp1_i,temp2_i;
+uint8_t pwm1_i,pwm2_i;
 
 typedef struct {
 	// basically a bool
@@ -60,7 +62,7 @@ void pwmpin(uint8_t *index, uint8_t pulsewidth, uint8_t pin);
 void adjustwithtemp_1(void);
 void adjustwithtemp_2(void);
 void adjustwithouttemp_1(void);
-void adjustwithouttemp_2(void);
+void adjustwithouttemp_2(pininputs input);
 pininputs readpins(void);
 
 // turns ADC on with correct settings by configuring bitmask
@@ -100,7 +102,7 @@ int main(void) {
 			adjustwithtemp_1();
 		}
 		else {
-			adjustwithouttemp_2();
+			adjustwithouttemp_2(inputs);
 		}
 		_delay_ms(50); // wait a bit
 	}
@@ -160,8 +162,10 @@ void adjustwithouttemp_1(void) {
 
 }
 
-void adjustwithouttemp_2(void) {
-
+void adjustwithouttemp_2(pininputs input) {
+	uint8_t pulsewidth = input.dial2*PWM_PERIOD/ADC_PRECISION;
+	uint8_t pin = PWM_PIN_2;
+	pwmpin(&pwm2_i,pulsewidth,pin);
 }
 
 // pin should should only have 1 1 bit
