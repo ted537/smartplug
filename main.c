@@ -181,4 +181,7 @@ void pwmpin(uint8_t *index,uint8_t pulsewidth, uint8_t pin) {
 		// unset pin bit
 		PORTD&=~pin;	
 	}
+	if (*index>=PWM_PERIOD) {
+		*index=0;
+	}
 }
